@@ -30,8 +30,25 @@ export default class NavBar extends Component {
               </Link>
             </li>
             <li className={styles.plugin}>
+              <Link to="/plugin/image" className={styles.link}>
+                Image
+              </Link>
+            </li>
+          </ul>
+          <ul className={styles.plugins}>
+            <li className={styles.plugin}>
               <Link to="/plugin/hashtag" className={styles.link}>
                 Hashtag
+              </Link>
+            </li>
+            <li className={styles.plugin}>
+              <Link to="/plugin/inline-toolbar" className={styles.link}>
+                Inline Toolbar
+              </Link>
+            </li>
+            <li className={styles.plugin}>
+              <Link to="/plugin/side-toolbar" className={styles.link}>
+                Side Toolbar
               </Link>
             </li>
             <li className={styles.plugin}>
@@ -45,6 +62,25 @@ export default class NavBar extends Component {
               </Link>
             </li>
           </ul>
+          <ul className={styles.plugins}>
+            <li className={styles.plugin}>
+              <Link to="/plugin/focus" className={styles.link}>
+                Focus
+              </Link>
+            </li>
+            <li className={styles.plugin}>
+              <Link to="/plugin/alignment" className={styles.link}>
+                Alignment
+              </Link>
+            </li>
+            <li className={styles.plugin}>
+              <Link to="/plugin/resizeable" className={styles.link}>
+                Resizeable
+              </Link>
+            </li>
+          </ul>
+        </div>
+        <div style={{ textAlign: 'center', marginTop: '3rem', fontSize: 13, color: '#aaa' }}>The documentation currently represents the 2.0.0-beta8 release.
         </div>
       </div>
     );

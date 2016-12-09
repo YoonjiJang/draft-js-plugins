@@ -16,10 +16,11 @@ export default class MentionSuggestions extends Component {
       'MUTABLE',
     ]),
     entryComponent: PropTypes.func,
+    onAddMention: PropTypes.func,
     suggestions: (props, propName, componentName) => {
       if (!List.isList(props[propName])) {
         return new Error(
-          `Invalid prop \`${propName}' supplied to \`${componentName}\`. should be an instance of immutable list.`
+          `Invalid prop \`${propName}\` supplied to \`${componentName}\`. should be an instance of immutable list.`
         );
       }
       return undefined;
@@ -132,12 +133,13 @@ export default class MentionSuggestions extends Component {
 
     if (selectionIsInsideWord.every((isInside) => isInside === false)) return removeList();
 
+    const lastActiveOffsetKey = this.activeOffsetKey;
     this.activeOffsetKey = selectionIsInsideWord
       .filter((value) => value === true)
       .keySeq()
       .first();
 
-    this.onSearchChange(editorState, selection);
+    this.onSearchChange(editorState, selection, this.activeOffsetKey, lastActiveOffsetKey);
 
     // make sure the escaped search is reseted in the cursor since the user
     // already switched to another mention search
@@ -166,10 +168,10 @@ export default class MentionSuggestions extends Component {
     return editorState;
   };
 
-  onSearchChange = (editorState, selection) => {
+  onSearchChange = (editorState, selection, activeOffsetKey, lastActiveOffsetKey) => {
     const { word } = getSearchText(editorState, selection);
     const searchValue = word.substring(1, word.length);
-    if (this.lastSearchValue !== searchValue) {
+    if (this.lastSearchValue !== searchValue || activeOffsetKey !== lastActiveOffsetKey) {
       this.lastSearchValue = searchValue;
       this.props.onSearchChange({ value: searchValue });
     }
@@ -214,6 +216,11 @@ export default class MentionSuggestions extends Component {
     if (!mention) {
       return;
     }
+
+    if (this.props.onAddMention) {
+      this.props.onAddMention(mention);
+    }
+
     this.closeDropdown();
     const newEditorState = addMention(
       this.props.store.getEditorState(),
@@ -236,7 +243,7 @@ export default class MentionSuggestions extends Component {
 
   commitSelection = () => {
     this.onMentionSelect(this.props.suggestions.get(this.state.focusedOptionIndex));
-    return true;
+    return 'handled';
   };
 
   openDropdown = () => {
@@ -291,6 +298,9 @@ export default class MentionSuggestions extends Component {
 
     const {
       entryComponent,
+      onClose, // eslint-disable-line no-unused-vars
+      onOpen, // eslint-disable-line no-unused-vars
+      onAddMention, // eslint-disable-line no-unused-vars, no-shadow
       onSearchChange, // eslint-disable-line no-unused-vars, no-shadow
       suggestions, // eslint-disable-line no-unused-vars
       ariaProps, // eslint-disable-line no-unused-vars
